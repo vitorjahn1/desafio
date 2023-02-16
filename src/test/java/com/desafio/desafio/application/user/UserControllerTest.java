@@ -1,16 +1,18 @@
 package com.desafio.desafio.application.user;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
+import com.desafio.desafio.application.user.exception.NotFoundUserGitHubException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.ZonedDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.hamcrest.CoreMatchers.is;
@@ -18,7 +20,7 @@ import static org.hamcrest.CoreMatchers.is;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-public class UserController {
+public class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -55,5 +57,16 @@ public class UserController {
                 .andExpect(jsonPath("$.created_at",is("2017-11-21T15:43:26")));
     }
 
+    @Test
+    @DisplayName("Api Get User Error Test ")
+    void errorTestGetApi() throws Exception {
+
+        MvcResult result  = mockMvc.perform(get("/user/kjlkjkl"))
+                                    .andExpect(MockMvcResultMatchers.status().is(404)).andReturn();
+
+        assertEquals(result.getResolvedException().toString(), NotFoundUserGitHubException.class.getName());
+
+
+    }
 
 }

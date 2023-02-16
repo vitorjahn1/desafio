@@ -14,9 +14,10 @@ public class ErrorService {
                  throw new NotFoundUserGitHubException(e);
             case 503:
                  throw new GitHubApiUnvailable(e);
+            default:
+                throw new RuntimeException(e);
 
         }
-        return null;
     }
 
     public RuntimeException exception(int code){
